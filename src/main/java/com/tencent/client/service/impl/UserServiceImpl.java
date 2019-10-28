@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tencent.client.enums.Message;
@@ -11,10 +12,13 @@ import com.tencent.client.mapper.DbUserMapper;
 import com.tencent.client.model.DbUser;
 import com.tencent.client.model.DbUserExample;
 import com.tencent.client.service.UserService;
+import com.tencent.client.util.RedisUtil;
 import com.tencent.client.util.ResponseVo;
 import com.tencent.client.vo.UserRegVo;
 @Service
 public class UserServiceImpl implements UserService {
+	@Autowired
+	RedisUtil redisUtil;
 	
 	@Resource
 	private DbUserMapper dbUserMapper;
@@ -37,6 +41,7 @@ public class UserServiceImpl implements UserService {
 		criteria.andNameEqualTo(userName);
 		return dbUserMapper.selectUserInfoByExample(example);
 	}
+	
 	@Override
 	public ResponseVo insert(UserRegVo user) {
 		ResponseVo responseVo = new ResponseVo();
@@ -48,6 +53,13 @@ public class UserServiceImpl implements UserService {
 		}
 		responseVo.setCode(Message.ERROR_A.getCode());
 		return responseVo;
+	}
+
+	@Override
+	public void sendMsg(String phone, String veriCode) {
+		String key = phone+veriCode;
+		redisUtil.set(key, veriCode, 600);
+		
 	}
 
 }

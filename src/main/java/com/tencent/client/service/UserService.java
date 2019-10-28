@@ -12,4 +12,6 @@ public interface UserService {
 
 	ResponseVo insert(UserRegVo user);
 
+	void sendMsg(String phone, String veriCode);
+
 }

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tencent.client.enums.Message;
 import com.tencent.client.model.DbUser;
 import com.tencent.client.service.UserService;
+import com.tencent.client.util.PhoneCodeUntil;
 import com.tencent.client.util.RedisUtil;
 import com.tencent.client.util.ResponseVo;
+import com.tencent.client.util.SendSms;
 import com.tencent.client.vo.UserLoginVo;
 import com.tencent.client.vo.UserRegVo;
 
@@ -97,4 +99,23 @@ public class UserContreoller {
 		return userService.insert(user);
 	}
 
+	/**
+	 * 	阿里云短信验证码
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	@PostMapping("sendMsg")
+	public ResponseVo sendMsg(@RequestBody String phone) {
+		ResponseVo responseVo = new ResponseVo();
+		if (StringUtils.isEmpty(phone)) {
+			responseVo.setMessage(Message.ERROR_A.getMessage());
+			return responseVo;
+		}
+		String veriCode = PhoneCodeUntil.Random();
+		userService.sendMsg(phone,veriCode);
+		return SendSms.aliyunSendSms(phone, veriCode);
+
+	}
+	
 }
