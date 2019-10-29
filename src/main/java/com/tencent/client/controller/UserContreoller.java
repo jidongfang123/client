@@ -1,5 +1,6 @@
 package com.tencent.client.controller;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tencent.client.config.Log;
+import com.tencent.client.config.LogAsPect;
 import com.tencent.client.enums.Message;
 import com.tencent.client.model.DbUser;
 import com.tencent.client.service.UserService;
@@ -25,6 +28,10 @@ public class UserContreoller {
 	RedisUtil redisUtil;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	LogAsPect asPect;
+	
+	private final static Logger log = org.slf4j.LoggerFactory.getLogger(UserContreoller.class);
 
 	@PostMapping("selectUserList")
 	public ResponseVo selectUserList() {
@@ -39,6 +46,7 @@ public class UserContreoller {
 	 */
 	@PostMapping("login")
 	public ResponseVo login(@RequestBody UserLoginVo user) {
+		log.info("我被执行了！");
 		ResponseVo responseVo = new ResponseVo();
 		String userName = user.getUserName();
 		String pwd = user.getPassword();
