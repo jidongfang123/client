@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tencent.client.util.UnZip;
+import com.tencent.client.util.Zip;
+
 @RestController
 @RequestMapping("dataFile")
 public class FileController {
@@ -35,7 +38,7 @@ public class FileController {
 		String fileRelName = file.getOriginalFilename();
 		//获取前缀
 		String prefix = fileRelName.substring(0,fileRelName.lastIndexOf("."));
-
+	
 		// 获取当前时间
 		String timeStr1 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		// 根据参数生成文件名称
@@ -56,9 +59,10 @@ public class FileController {
 		}
 		// 文件转换
 		InputStream inputStreams = new ByteArrayInputStream(file.getBytes());
+		//UnZip.unZip(file);
 		// 写入文件
 		Files.copy(inputStreams, Paths.get(dirPath + File.separator + fileName + "." + suffix));
-
+		Zip.decompressZip( dirPath + File.separator + fileName + "." + suffix,dirPath + File.separator );
 		return "ok";
 	}
 
