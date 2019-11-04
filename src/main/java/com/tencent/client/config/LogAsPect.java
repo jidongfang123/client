@@ -70,7 +70,6 @@ public class LogAsPect {
          Long userid = 1L;//应该从session中获取当前登录人的id，这里简单模拟下
          
          sys_log.setUserId(userid);
-     		System.out.print(new Date());
          sys_log.setCreateTime(new Date());
          sys_log.setUserAction("当前登陆人:"+userid+",类名:"+className+",方法名:"+methodName+"参数:"+args+"执行时间:"+System.currentTimeMillis()+"1" );
          
