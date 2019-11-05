@@ -1,23 +1,21 @@
 package com.tencent.client.config;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.TimeZone;
 
-import org.aspectj.lang.JoinPoint;
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tencent.client.model.SysLog;
 import com.tencent.client.service.ISysLogService;
@@ -50,13 +48,16 @@ public class LogAsPect {
     	 MethodSignature signature = (MethodSignature)point.getSignature();
          Method method = signature.getMethod();
          SysLog sys_log = new SysLog();
-         
+        
          Log userAction = method.getAnnotation(Log.class);
          if (userAction != null) {
              // 注解上的描述
              sys_log.setUserAction(userAction.value());
          }
+        // HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
          
+       //  String header = request.getHeader("Authorization");
+         //System.out.println(header);
          // 请求的类名
          String className = point.getTarget().getClass().getName();
          // 请求的方法名
@@ -77,12 +78,6 @@ public class LogAsPect {
          sysLogService.insertLog(sys_log);
          return result;
     	
-    }
-    
-    public static void main(String[] args) {
-		
-    	System.out.print(new Date());
-	}
-    
+    } 
    
 }
