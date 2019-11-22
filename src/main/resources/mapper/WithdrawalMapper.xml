@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.client.mapper.WithdrawalMapper"> 
+	<resultMap type="Map" id="BaseResultMap">
+      <result column="num" property="num"/>
+      <result column="court_code" property="court_code"/>
+      <result column="courtName" property="courtName"/>
+      <result column="province" property="province"/>
+      <result column="region" property="region"/>
+  </resultMap>
+  <select id="withdrawalCaseCount" resultMap="BaseResultMap"> 
+	  SELECT
+	 COUNT(a.court_code) AS num,
+		a.court_code,
+		a.`name` as courtName,
+		a.sfmc as province,
+		a.FYDC as region,  
+	count(if(a.xytype=2,true,null)) AS withdrawalNum  				
+	FROM
+		(
+		SELECT
+			a.court_code,
+			b.`name`,
+			c.sfmc,
+			d.FYDC ,
+			 a.xytype
+		FROM
+			data_zx_case_agreements a
+			LEFT JOIN kyla_biz_type b ON a.court_code = b.description
+			LEFT JOIN wfy_djzb c ON b.icon = c.jc
+			LEFT JOIN kyla_biz_courts d ON b.description = d.dm
+		) a 
+	GROUP BY
+		a.court_code,
+		a.`name`,
+		a.sfmc,
+		a.FYDC
+  </select>
+  
+  	<resultMap type="Map" id="executionNodeResultMap">
+      <result column="num" property="num"/>
+      <result column="court_code" property="court_code"/>
+      <result column="courtName" property="courtName"/>
+      <result column="province" property="province"/>
+      <result column="region" property="region"/>
+      <result column="type" property="type"/>
+      <result column="remake" property="remake"/>
+  </resultMap>
+  <select id="executionNode" resultMap="executionNodeResultMap">
+	  SELECT
+		COUNT( a.court_code ) AS num,
+		a.court_code,
+		a.`name` AS courtName,
+		a.sfmc AS province,
+		a.FYDC AS region,
+		( CASE a.cclx WHEN 1 THEN '公开' WHEN 2 THEN '采集' ELSE 'null' END ) type,
+		( CASE a.STATUS WHEN 1 THEN '送达' WHEN 2 THEN '约谈' WHEN 3 THEN '结案' ELSE 'null' END ) remake 
+	FROM
+		(
+		SELECT
+			a.court_code,
+			b.`name`,
+			c.sfmc,
+			d.FYDC,
+			a.cclx,
+			a.STATUS 
+		FROM
+			data_zx_case_nodes a
+			LEFT JOIN kyla_biz_type b ON a.court_code = b.description
+			LEFT JOIN wfy_djzb c ON b.icon = c.jc
+			LEFT JOIN kyla_biz_courts d ON b.description = d.dm 
+		) a 
+	GROUP BY
+		a.court_code,
+		a.`name`,
+		a.sfmc,
+		a.FYDC,
+		a.cclx,
+		a.STATUS
+  </select>
+</mapper>
