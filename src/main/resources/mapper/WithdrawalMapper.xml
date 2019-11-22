@@ -78,4 +78,108 @@
 		a.cclx,
 		a.STATUS
   </select>
+  
+  <select id="distributionPartie" resultMap="">
+  SELECT
+	count( * ) as num,
+	a.court_code,
+		a.`name` as courtName,
+		a.sfmc as province,
+		a.FYDC as region,  
+	a.sf  as partyLoc
+FROM
+	(
+	SELECT
+	CASE
+			
+		WHEN
+			SUBSTRING( b.identity_id, 1, 2 ) = '11' THEN
+				'北京' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '12' THEN
+				'天津' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '13' THEN
+				'河北' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '14' THEN
+				'山西' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '15' THEN
+				'内蒙古' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '21' THEN
+				'辽宁' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '22' THEN
+				'吉林' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '23' THEN
+				'黑龙江' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '31' THEN
+				'上海' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '32' THEN
+				'江苏' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '33' THEN
+				'浙江' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '34' THEN
+				'安徽' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '35' THEN
+				'福建' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '36' THEN
+				'江西' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '37' THEN
+				'山东' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '41' THEN
+				'河南' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '42' THEN
+				'湖北' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '43' THEN
+				'湖南' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '44' THEN
+				'广东' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '45' THEN
+				'广西' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '46' THEN
+				'海南' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '50' THEN
+				'重庆' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '51' THEN
+				'四川' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '52' THEN
+				'贵州' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '53' THEN
+				'云南' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '54' THEN
+				'西藏' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '61' THEN
+				'陕西' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '62' THEN
+				'甘肃' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '63' THEN
+				'青海' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '64' THEN
+				'宁夏' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '65' THEN
+				'新疆' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '71' THEN
+				'台湾' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '81' THEN
+				'香港' 
+				WHEN SUBSTRING( b.identity_id, 1, 2 ) = '91' THEN
+				'澳门' 
+			END AS sf,
+			a.court_code,
+			b.identity_id,
+			d.sfmc,
+			c.`name`,
+			e.FYDC 
+		FROM
+			( SELECT case_id, identity_id FROM case_litigants WHERE type = 1 AND trim( identity_id ) != '' ) b
+			LEFT JOIN cases a ON a.id = b.case_id
+			LEFT JOIN kyla_biz_type c ON a.court_code = c.description
+			LEFT JOIN wfy_djzb d ON c.icon = d.jc
+			LEFT JOIN kyla_biz_courts e ON e.dm = a.court_code 
+		) a 
+GROUP BY
+	a.sf,
+		a.court_code,
+		a.sfmc,
+		a.name,
+		a.FYDC
+  
+ </select>
 </mapper>
