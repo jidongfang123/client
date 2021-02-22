@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
@@ -39,9 +42,4 @@ public class DataCountController {
      
   }
   
-  public static void main (String[] args) {
-    DataCountController data = new DataCountController(); 
-    data.accessSituation();
-  }
-
 }
